@@ -8,8 +8,7 @@ from tqdm import tqdm
 
 # Check if string is float number
 def isfloat(value): 
-    t = value.replace('.', '').isdigit()
-    return t
+    return value.replace('.', '').isdigit()
 
 # Get the latest ubuntu iso and downloading it to the iso folder
 def ubuntu():
