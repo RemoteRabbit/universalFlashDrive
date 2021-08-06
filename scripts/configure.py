@@ -1,39 +1,67 @@
-import json
 import sys 
-import string
 import os
-
-build_config = {}
-
-def add_config_item(key, value):
-    build_config[key] = value
-
-# Get OS type
-add_config_item("os_name", sys.platform)
-
-# Get Available drives
-if build_config["os_name"] == "win32":
-    # Get Dest Drive
-    available_drives = [f'{d}:'for d in string.ascii_uppercase if os.path.exists(f'{d}:')]
-    print(available_drives)
-    while True:
-        drive_letter = input('Please select a drive letter for storage: ')
-        if (f'{drive_letter.upper()}:') not in available_drives:
-            print('Invalid drive letter')
-            continue
-        else:
-            add_config_item("dest_dir", f'{drive_letter.upper()}:/')
-            break
-elif build_config["os_name"] == "linux":
-    print("Linux")
-elif build_config["os_name"] == "darwin":
-    print("OSX")
-else:
-    print("Unsupported OS")
+import configparser
 
 
+config = configparser.ConfigParser()
+os_name = sys.platform
+src_dir = os.getcwd()
 
-jsonDump = json.dumps(build_config, indent=4)
+# Base dirs to be made on build, separate each dir with a space
+setup_dirs = 'tmp logs'
 
-with open('scripts/config.json', 'w') as json_data:
-    json_data.write(jsonDump)
+def get_win_drives():
+    """
+    Return a list of all available drives
+    """
+    if sys.platform == 'win32':
+        import win32api
+        drives = win32api.GetLogicalDriveStrings()
+        drives = drives.split('\\\x00')[:-1]
+        return [d for d in drives if os.path.exists(d)]
+    else:
+        return []
+
+def get_linux_drives():
+    """
+    Return a list of all available drives
+    * will need to distinguish between wsl and native
+    """
+    if sys.platform == 'linux':
+        return [f'{dev.upper()}:' for dev in os.listdir('/mnt/') if dev]
+    else:
+        return []
+
+def available_drives():
+    """
+    Return a list of all available drives based on OS
+    """
+    platform = sys.platform
+    if platform == 'win32':
+        return get_win_drives()
+    elif platform == 'linux':
+        return get_linux_drives()
+    else:
+        print('Operating system not supported')
+
+# Get user input for which drive to use
+while True:
+    drive_letter = input(f'{available_drives()} \nPlease select a drive letter for storage: ').upper()
+    if (f'{drive_letter}:') not in available_drives():
+        print('Invalid drive letter')
+        continue
+    else:
+        flash_drive = drive_letter
+        break       
+
+# Build out OS section of config.ini file
+config['BASE'] = {
+    'os_name': os_name,
+    'drive_letter': flash_drive,
+    'src_dir': src_dir,
+    'setup_dirs': setup_dirs
+}
+
+# Write config.ini file
+with open('scripts/config.ini', 'w') as configfile:
+    config.write(configfile)

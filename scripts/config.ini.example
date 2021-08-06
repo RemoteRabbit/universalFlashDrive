@@ -1,0 +1,7 @@
+[BASE]
+os_name = win32
+available_drives = ['G:', 'F:', 'E:', 'D:', 'C:']
+drive_letter = G
+src_dir = /home/src/universalFlashDrive
+setup_dirs = tmp logs
+
