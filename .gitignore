@@ -1,3 +1,5 @@
 venv
 iso/*.iso
 __pycache__
+scripts/*.pyc
+scripts/config.json

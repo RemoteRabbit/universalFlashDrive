@@ -1,14 +1,32 @@
 import requests
 from bs4 import BeautifulSoup
 import os
+import sys
 from tqdm import tqdm
+
+# When called we check which OS is running on host
+# and call the corresponding function
+# which will pass in a path argument to the corresponding ISO
+# function which will download the ISO to that path dependent on OS
+
+def main():
+    user_os = sys.platform
+    if user_os == 'win32':
+        path = os.getcwd()
+    elif user_os == 'linux':
+        print('Linux')
+    elif user_os == 'darwin':
+        print('Mac')
+    else:
+        print('Operating system not supported')
 
 
 # Windows 10 ISOs have to be manually installed and updated
 
 # Check if string is float number
 def isfloat(value): 
-    return value.replace('.', '').isdigit()
+    t = value.replace('.', '').isdigit()
+    return t
 
 # Get the latest ubuntu iso and downloading it to the iso folder
 def ubuntu():
@@ -39,4 +57,4 @@ def ubuntu():
 
         print(f'Ubuntu {recent_release} is downloaded')
 
-ubuntu()
+main()

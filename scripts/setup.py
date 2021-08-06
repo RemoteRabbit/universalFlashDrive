@@ -3,11 +3,15 @@ import sys
 import string
 import shutil
 from tqdm import tqdm
+import json
 
 setup_dirs = [
     'temp',
     'logs',
     ]
+
+with open("scripts/config.json", "r") as jsonfile:
+    data = json.load(jsonfile)
 
 src_dir = os.getcwd()
 
@@ -26,24 +30,20 @@ def get_size(path):
 # Windows based function setup
 def windows():
     # Gather all available drive letters and print to screen
-    available_drives = [f'{d}:'for d in string.ascii_uppercase if os.path.exists(f'{d}:')]
-    print(available_drives)
-    drive_letter = input('Please select a drive letter for storage: ')
-    dest_dir = f'{drive_letter}:/'
-    os.chdir(dest_dir)
+    os.chdir(data.get('dest_dir'))
 
     for d in setup_dirs:
         if d not in os.listdir():
             os.makedirs(f'{d}')
 
     # Copy all files from the source to the destination
-    if "scripts" not in os.listdir(dest_dir):
-        os.makedirs(f'{dest_dir}/scripts')
+    if "scripts" not in os.listdir(data.get('dest_dir')):
+        os.makedirs(f'{data.get("dest_dir")}/scripts')
         with tqdm(total=get_size(f'{src_dir}/scripts'),unit='B', unit_scale=True, unit_divisor=1024) as pbar:
             for dirpath, dirnames, filenames in os.walk(f'{src_dir}/scripts'):
                 for f in filenames:
                     fp = os.path.join(dirpath, f)
-                    shutil.copy(fp, f'{dest_dir}/scripts/')
+                    shutil.copy(fp, f'{data.get("dest_dir")}/scripts/')
                     pbar.update(os.path.getsize(fp))
     else:
         print('Scripts already copied')
