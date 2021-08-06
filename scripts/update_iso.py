@@ -1,14 +1,14 @@
 import requests
 from bs4 import BeautifulSoup
-from clint.textui import progress
 import os
+from tqdm import tqdm
+
 
 # Windows 10 ISOs have to be manually installed and updated
 
 # Check if string is float number
 def isfloat(value): 
-    t = value.replace('.', '').isdigit()
-    return t
+    return value.replace('.', '').isdigit()
 
 # Get the latest ubuntu iso and downloading it to the iso folder
 def ubuntu():
@@ -32,9 +32,11 @@ def ubuntu():
         path = f"iso/ubuntu-{recent_release}-desktop-amd64.iso"
         with open(path, 'wb') as f:
             total_length = int(iso_req.headers.get('content-length'))
-            for chunk in progress.bar(iso_req.iter_content(chunk_size=1024), expected_size=(total_length/1024) + 1): 
-                if chunk:
-                    f.write(chunk)
-                    f.flush()
+            with tqdm(total=total_length, unit='B', unit_scale=True, unit_divisor=1024) as pbar:
+                for chunk in iso_req.iter_content(chunk_size=1024):
+                    pbar.update(len(chunk))
+
+
+        print(f'Ubuntu {recent_release} is downloaded')
 
 ubuntu()
