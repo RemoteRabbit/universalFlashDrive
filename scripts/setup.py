@@ -25,6 +25,8 @@ if config['BASE']['os_name'] == 'win32':
     drive_letter = f'{config["BASE"]["drive_letter"]}:/'
 elif config['BASE']['os_name'] == 'linux': 
     drive_letter = f'/mnt/{(config["BASE"]["drive_letter"]).lower()}'
+elif config['BASE']['os_name'] == 'darwin':
+    drive_letter = f'/Volumes/{(config["BASE"]["drive_letter"]).lower()}'
 else:
     print('OS not supported')
     
