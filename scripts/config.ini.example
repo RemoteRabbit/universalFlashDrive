@@ -1,0 +1,9 @@
+[BASE]
+os_name = darwin
+storage_drive = /Volumes/storage
+src_dir = /Users/user/SourceCode/universalFlashDrive
+setup_dirs = tmp logs
+
+[VENTOY]
+drive_letter = /Volumes/Ventoy
+

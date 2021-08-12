@@ -1,7 +1,29 @@
 import requests
 from bs4 import BeautifulSoup
 import os
+import sys
 from tqdm import tqdm
+import configparser
+
+config = configparser.ConfigParser()
+with open ('scripts/config.ini', 'r') as configFile:
+    config.read_file(configFile)
+
+# When called we check which OS is running on host
+# and call the corresponding function
+# which will pass in a path argument to the corresponding ISO
+# function which will download the ISO to that path dependent on OS
+
+def main():
+    user_os = sys.platform
+    if user_os == 'win32':
+        path = os.getcwd()
+    elif user_os == 'linux':
+        print('Linux')
+    elif user_os == 'darwin':
+        print('Mac')
+    else:
+        print('Operating system not supported')
 
 
 # Windows 10 ISOs have to be manually installed and updated
@@ -39,4 +61,4 @@ def ubuntu():
 
         print(f'Ubuntu {recent_release} is downloaded')
 
-ubuntu()
+main()
