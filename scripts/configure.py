@@ -35,8 +35,10 @@ def get_mac_drives():
     """
     try:
         for drive in os.listdir('/Volumes/'):
-            if os.path.isdir('/Volumes/storage'):
-                return drive
+            if os.path.isdir('/Volumes/storage') and os.path.exists('/Volumes/Ventoy'):
+                return ['/Volumes/storage', '/Volumes/Ventoy']
+            else:
+                print('No storage and or Ventoy volume found')
     except:
         print('No mac drive "storage" found')
     
@@ -60,7 +62,8 @@ while True:
     # If user is coming from windows or linux, have user select drive.
     if os_name == 'darwin':
         print(f'Mac detected \nAdding {available_drives()} to config.')
-        flash_drive = available_drives()
+        flash_drive = available_drives()[0]
+        ventoy_drive = available_drives()[1]
         break
     else:
         drive_letter = input(f'{available_drives()} \nPlease select a drive letter for storage: ').upper()
@@ -74,9 +77,13 @@ while True:
 # Build out OS section of config.ini file
 config['BASE'] = {
     'os_name': os_name,
-    'drive_letter': flash_drive,
+    'storage_drive': flash_drive,
     'src_dir': src_dir,
     'setup_dirs': setup_dirs
+}
+
+config['VENTOY'] = {
+    'drive_letter': ventoy_drive,
 }
 
 # Write config.ini file
