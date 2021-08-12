@@ -34,7 +34,7 @@ def get_mac_drives():
     Return string for storage volume to validate it is present
     """
     try:
-        for drive in os.listdir('/Volumes/'):
+        for _ in os.listdir('/Volumes/'):
             if os.path.isdir('/Volumes/storage') and os.path.exists('/Volumes/Ventoy'):
                 return ['/Volumes/storage', '/Volumes/Ventoy']
             else:
