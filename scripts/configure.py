@@ -1,4 +1,4 @@
-import sys 
+import sys
 import os
 import configparser
 
@@ -9,6 +9,7 @@ src_dir = os.getcwd()
 
 # Base dirs to be made on build, separate each dir with a space
 setup_dirs = 'tmp logs'
+
 
 def get_win_drives():
     """
@@ -22,6 +23,7 @@ def get_win_drives():
     else:
         return []
 
+
 def get_linux_drives():
     """
     Return a list of all available drives
@@ -31,6 +33,7 @@ def get_linux_drives():
         return [f'{dev.upper()}:' for dev in os.listdir('/mnt/') if dev]
     else:
         return []
+
 
 def available_drives():
     """
@@ -44,22 +47,45 @@ def available_drives():
     else:
         print('Operating system not supported')
 
+
 # Get user input for which drive to use
 while True:
-    drive_letter = input(f'{available_drives()} \nPlease select a drive letter for storage: ').upper()
+    drive_letter = input(
+        f'{available_drives()} \nPlease select a drive letter for storage: ').upper()
     if (f'{drive_letter}:') not in available_drives():
         print('Invalid drive letter')
         continue
     else:
         flash_drive = drive_letter
-        break       
+        break
+
+while True:
+    drive_letter = input(
+        f'{available_drives()} \nPlease select the Ventoy Drive letter: ').upper()
+    if (f'{drive_letter}:') not in available_drives():
+        print('Invalid drive letter')
+        continue
+    else:
+        ventoy_drive = drive_letter
+        break
+
+# Section used to altering the few os specific settings
+if os_name == 'win32':
+    flash_drive = f'{flash_drive}:'
+    ventoy_drive = f'{ventoy_drive}:'
+elif os_name == 'linux':
+    flash_drive = f'/mnt/{flash_drive.lower()}'
+    ventoy_drive = f'/mnt/{ventoy_drive.lower()}'
+else:
+    print('Operating system not supported')
 
 # Build out OS section of config.ini file
 config['BASE'] = {
     'os_name': os_name,
     'drive_letter': flash_drive,
     'src_dir': src_dir,
-    'setup_dirs': setup_dirs
+    'setup_dirs': setup_dirs,
+    'ventoy_drive': ventoy_drive
 }
 
 # Write config.ini file
