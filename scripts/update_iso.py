@@ -3,6 +3,11 @@ from bs4 import BeautifulSoup
 import os
 import sys
 from tqdm import tqdm
+import configparser
+
+config = configparser.ConfigParser()
+with open ('scripts/config.ini', 'r') as configFile:
+    config.read_file(configFile)
 
 # When called we check which OS is running on host
 # and call the corresponding function
@@ -25,8 +30,7 @@ def main():
 
 # Check if string is float number
 def isfloat(value): 
-    t = value.replace('.', '').isdigit()
-    return t
+    return value.replace('.', '').isdigit()
 
 # Get the latest ubuntu iso and downloading it to the iso folder
 def ubuntu():
