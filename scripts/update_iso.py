@@ -23,12 +23,10 @@ with open('scripts/config.ini', 'r') as configFile:
 
 def main():
     user_os = sys.platform
-    if user_os == 'win32':
-        ubuntu()
-    elif user_os == 'linux':
-        ubuntu()
-    elif user_os == 'darwin':
+    if user_os == 'darwin':
         print('Mac')
+    elif user_os in ['win32', 'linux']:
+        ubuntu()
     else:
         print('Operating system not supported')
 
@@ -37,8 +35,7 @@ def main():
 
 # Check if string is float number
 def isfloat(value):
-    t = value.replace('.', '').isdigit()
-    return t
+    return value.replace('.', '').isdigit()
 
 
 def sha256Checksum(filename, sha256_file):
@@ -51,10 +48,7 @@ def sha256Checksum(filename, sha256_file):
         sha256.update(data)
 
     with open(sha256_file, 'r') as f:
-        if sha256.hexdigest() in f.read():
-            return True
-        else:
-            return False
+        return sha256.hexdigest() in f.read()
 
 # Get the latest ubuntu iso and downloading it to the iso folder
 
