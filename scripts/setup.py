@@ -22,14 +22,6 @@ def get_size(path):
     return total_size
 
 
-# Gather all available drive letters and print to screen
-# if config['BASE']['os_name'] == 'win32':
-#     drive_letter = f'{config["BASE"]["drive_letter"]}/'
-# elif config['BASE']['os_name'] == 'linux':
-#     drive_letter = f'/mnt/{(config["BASE"]["drive_letter"]).lower()}'
-# else:
-#     print('OS not supported')
-
 os.chdir(config['BASE']['drive_letter'])
 
 # mkdirs for setup_dirs if they do not exist
